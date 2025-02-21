@@ -26,6 +26,10 @@
 #ifndef FINDSADDR_UDP_H_
 #define FINDSADDR_UDP_H_
 
+
+
+extern struct sockaddr_in6 global_source_ip;
+
 const char *findsaddr(register const struct sockaddr_in *to,
         struct in6_addr *from);
 

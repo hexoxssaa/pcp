@@ -273,7 +273,7 @@ end:
 #if defined (USE_WIN32_CODE) && defined(WIN32)
 
 #if 1 // WINVER>=NTDDI_VISTA
-int getgateways(struct in6_addr **gws)
+int getgateways(struct sockaddr_in6 **gws)
 {
     PMIB_IPFORWARD_TABLE2 ipf_table;
     unsigned int i;
@@ -290,9 +290,11 @@ int getgateways(struct in6_addr **gws)
         return PCP_ERR_UNKNOWN;
     }
 
-    *gws=(struct in6_addr *)calloc(ipf_table->NumEntries,
-            sizeof(struct in6_addr));
-    if (*gws) {
+    *gws=(struct sockaddr_in6*)calloc(ipf_table->NumEntries,
+            sizeof(struct sockaddr_in6));
+
+
+    if (*gws == NULL) {
         PCP_LOG(PCP_LOGLVL_DEBUG, "%s", "Error allocating memory");
         return PCP_ERR_NO_MEM;
     }

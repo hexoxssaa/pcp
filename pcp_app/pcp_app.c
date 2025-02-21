@@ -31,6 +31,7 @@
 
 #include "pcp.h"
 #include "pcp_msg_structs.h"
+#include "findsaddr.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -467,6 +468,7 @@ int main(int argc, char *argv[])
         fprintf(stderr, "Entered invalid internal address!\n");
         exit(1);
     }
+    memcpy(&global_source_ip, &source_ip, sizeof(struct sockaddr_in6));
 
     if ((p.peer_addr)&&(0!=sock_pton(p.peer_addr, (struct sockaddr*)&destination_ip))) {
         fprintf(stderr, "Entered invalid peer address!\n");
@@ -507,6 +509,12 @@ int main(int argc, char *argv[])
     } else {
         p.ctx = pcp_init(DISABLE_AUTODISCOVERY, NULL);
     }
+
+	if (p.int_addr) {
+        for (int i = 0; i < p.ctx->pcp_db.pcp_servers_length; i++) {
+            memcpy(p.ctx->pcp_db.pcp_servers[i].src_ip, &((struct sockaddr_in6*)&source_ip)->sin6_addr, sizeof(p.ctx->pcp_db.pcp_servers[i].src_ip));
+        }
+	}
 
     for (server = p.pcp_servers; server!=NULL; server=server->next) {
         struct sockaddr *sa;

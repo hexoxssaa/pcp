@@ -68,6 +68,8 @@
 #define INVALID_SOCKET -1
 #endif
 
+struct sockaddr_in6 global_source_ip;
+
 const char *findsaddr(register const struct sockaddr_in *to,
         struct in6_addr *from)
 {
@@ -140,6 +142,14 @@ const char *findsaddr6(register const struct sockaddr_in6 *to,
     len=sizeof(struct sockaddr_in6);
     memcpy(&cto, to, len);
     cto.sin6_port=htons(65535); /* Dummy port for connect(2). */
+
+    if (global_source_ip.sin6_family != 0) {
+        if (bind(s, (struct sockaddr*)&global_source_ip, len) != 0) {
+            errstr = "failed to bind socket to global_source_ip.";
+            goto err;
+        }
+    }
+
     if (connect(s, (struct sockaddr *)&cto, len) == -1) {
         errstr="failed to connect to peer for src addr selection.";
         goto err;

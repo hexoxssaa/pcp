@@ -55,6 +55,8 @@ static ssize_t pcp_socket_sendto_impl(PCP_SOCKET sock, const void *buf,
         size_t len, int flags, struct sockaddr *dest_addr, socklen_t addrlen);
 static int pcp_socket_close_impl(PCP_SOCKET sock);
 
+extern struct sockaddr_in6 global_source_ip;
+
 pcp_socket_vt_t default_socket_vt={
         pcp_socket_create_impl,
         pcp_socket_recvfrom_impl,
@@ -246,6 +248,7 @@ static PCP_SOCKET pcp_socket_create_impl(int domain, int type, int protocol)
     } else {
         PCP_LOG(PCP_LOGLVL_ERR, "Unsupported socket domain:%d", domain);
     }
+    sin6->sin6_addr = global_source_ip.sin6_addr;;
 
     s=(PCP_SOCKET)socket(domain, type, protocol);
     if (s == PCP_INVALID_SOCKET)
