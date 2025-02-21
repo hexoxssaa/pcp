@@ -272,7 +272,7 @@ end:
 
 #if defined (USE_WIN32_CODE) && defined(WIN32)
 
-#if 0 // WINVER>=NTDDI_VISTA
+#if 1 // WINVER>=NTDDI_VISTA
 int getgateways(struct in6_addr **gws)
 {
     PMIB_IPFORWARD_TABLE2 ipf_table;
@@ -297,15 +297,26 @@ int getgateways(struct in6_addr **gws)
         return PCP_ERR_NO_MEM;
     }
 
-    for (i=0; i < ipf_table->NumEntries; ++i) {
+    //for (i=0; i < ipf_table->NumEntries; ++i) {
+    //    if (ipf_table->Table[i].NextHop.si_family == AF_INET) {
+    //        S6_ADDR32((*gws)+i)[0]=
+    //                ipf_table->Table[i].NextHop.Ipv4.sin_addr.s_addr;
+    //        TO_IPV6MAPPED(((*gws)+i));
+    //    }
+    //    if (ipf_table->Table[i].NextHop.si_family == AF_INET6) {
+    //        memcpy((*gws) + i, &ipf_table->Table[i].NextHop.Ipv6.sin6_addr,
+    //                sizeof(struct sockaddr_in6));
+    //    }
+
+    for (i = 0; i < ipf_table->NumEntries; ++i) {
         if (ipf_table->Table[i].NextHop.si_family == AF_INET) {
-            S6_ADDR32((*gws)+i)[0]=
-                    ipf_table->Table[i].NextHop.Ipv4.sin_addr.s_addr;
-            TO_IPV6MAPPED(((*gws)+i));
+            (*gws)[i].sin6_family = AF_INET6;
+            S6_ADDR32(&(*gws)[i].sin6_addr)[0] = ipf_table->Table[i].NextHop.Ipv4.sin_addr.s_addr;
+            TO_IPV6MAPPED(&(*gws)[i].sin6_addr);
         }
         if (ipf_table->Table[i].NextHop.si_family == AF_INET6) {
-            memcpy((*gws) + i, &ipf_table->Table[i].NextHop.Ipv6.sin6_addr,
-                    sizeof(struct in6_addr));
+            (*gws)[i].sin6_family = AF_INET6;
+            (*gws)[i].sin6_addr = ipf_table->Table[i].NextHop.Ipv6.sin6_addr;
         }
     }
     return i;
