@@ -248,7 +248,10 @@ static PCP_SOCKET pcp_socket_create_impl(int domain, int type, int protocol)
     } else {
         PCP_LOG(PCP_LOGLVL_ERR, "Unsupported socket domain:%d", domain);
     }
-    sin6->sin6_addr = global_source_ip.sin6_addr;;
+	
+    if (global_source_ip.sin6_family == AF_INET6) {
+        sin6->sin6_addr = global_source_ip.sin6_addr;
+    }
 
     s=(PCP_SOCKET)socket(domain, type, protocol);
     if (s == PCP_INVALID_SOCKET)
