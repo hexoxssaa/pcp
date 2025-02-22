@@ -121,6 +121,7 @@ sock_pton(const char* cp, struct sockaddr *sa)
     const char * ip_end;
     char * host_name = NULL;
     const char* port=NULL;
+    struct sockaddr_in6* sin6 = (struct sockaddr_in6*)&sa;
     if ((!cp)||(!sa)) {
         return -1;
     }
@@ -206,6 +207,12 @@ sock_pton(const char* cp, struct sockaddr *sa)
                 break;
             }
         }
+        int numport = atoi(port);
+        if (numport == 0 && strcmp(port, "0") != 0) {
+            fprintf(stderr, "Invalid port number: %s\n", port);
+            return 1;
+        }
+        sin6->sin6_port = htons(numport);
         freeaddrinfo(servinfo);
     }
 

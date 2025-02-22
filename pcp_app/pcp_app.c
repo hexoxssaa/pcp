@@ -469,7 +469,7 @@ int main(int argc, char *argv[])
         fprintf(stderr, "Entered invalid internal address!\n");
         exit(1);
     }
-    sin6->sin6_port = 0;
+
     memcpy(&global_source_ip, &source_ip, sizeof(struct sockaddr_in6));
 
     if ((p.peer_addr)&&(0!=sock_pton(p.peer_addr, (struct sockaddr*)&destination_ip))) {

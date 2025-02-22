@@ -90,3 +90,5 @@ docs/_build/
 
 # PyBuilder
 target/
+/.vs
+/enc_temp_folder
