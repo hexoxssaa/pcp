@@ -451,6 +451,7 @@ int main(int argc, char *argv[])
     struct sockaddr_storage ext_ip;
     struct sockaddr_storage filter_ip;
     struct sockaddr_storage thirdparty_ip;
+    struct sockaddr_in6* sin6 = (struct sockaddr_in6*)&source_ip;
     int ret_val = 1;
     pcp_flow_t* flow = NULL;
     struct pcp_server_list *server;
@@ -468,6 +469,7 @@ int main(int argc, char *argv[])
         fprintf(stderr, "Entered invalid internal address!\n");
         exit(1);
     }
+    sin6->sin6_port = 0;
     memcpy(&global_source_ip, &source_ip, sizeof(struct sockaddr_in6));
 
     if ((p.peer_addr)&&(0!=sock_pton(p.peer_addr, (struct sockaddr*)&destination_ip))) {
