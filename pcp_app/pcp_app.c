@@ -470,6 +470,7 @@ int main(int argc, char *argv[])
     }
 
     memcpy(&global_source_ip, &source_ip, sizeof(struct sockaddr_in6));
+	global_source_ip.sin6_port = 0;
 
     if ((p.peer_addr)&&(0!=sock_pton(p.peer_addr, (struct sockaddr*)&destination_ip))) {
         fprintf(stderr, "Entered invalid peer address!\n");
