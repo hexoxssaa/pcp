@@ -451,7 +451,6 @@ int main(int argc, char *argv[])
     struct sockaddr_storage ext_ip;
     struct sockaddr_storage filter_ip;
     struct sockaddr_storage thirdparty_ip;
-    struct sockaddr_in6* sin6 = (struct sockaddr_in6*)&source_ip;
     int ret_val = 1;
     pcp_flow_t* flow = NULL;
     struct pcp_server_list *server;
