@@ -20,4 +20,6 @@ Linux, MS Windows (Vista and later), OS X.
 
 Build instructions are located in INSTALL.md file. More information about
 components are in each subdirectory's README.md file.
+===========================================================================
+del stdin.h when compline in linux
 
